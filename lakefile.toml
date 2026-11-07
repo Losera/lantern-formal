@@ -1,0 +1,10 @@
+name = "lantern_formal"
+version = "0.1.0"
+defaultTargets = ["Lantern", "oracle"]
+
+[[lean_lib]]
+name = "Lantern"
+
+[[lean_exe]]
+name = "oracle"
+root = "Main"

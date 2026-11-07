@@ -1,0 +1,1599 @@
+[
+  {
+    "name": "empty_witness",
+    "input": {
+      "events": []
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "requests": [],
+        "outcomes": [],
+        "commitments": [],
+        "coverage": []
+      }
+    }
+  },
+  {
+    "name": "successful_receipt",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "cite",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "complete": [
+          0
+        ],
+        "sealed": [
+          0
+        ],
+        "commitments": [
+          {
+            "run": 0,
+            "operation": 0,
+            "payload": 0
+          }
+        ],
+        "coverage": [
+          {
+            "run": 0,
+            "covered": true,
+            "pending": []
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "failure_can_have_complete_coverage",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "fail",
+          "run": 0,
+          "attempt": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "complete": [
+          0
+        ],
+        "outcomes": [
+          {
+            "run": 0,
+            "attempt": 0,
+            "result": {
+              "status": "failure"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "pending_is_accepted_but_uncovered",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "complete": [],
+        "coverage": [
+          {
+            "run": 0,
+            "covered": false,
+            "pending": [
+              0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "timeout_is_unknown",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "timeout",
+          "run": 0,
+          "attempt": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "outcomes": [],
+        "coverage": [
+          {
+            "run": 0,
+            "covered": false,
+            "pending": [
+              0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "late_success_resolves_timeout",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "timeout",
+          "run": 0,
+          "attempt": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "cite",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "coverage": [
+          {
+            "run": 0,
+            "covered": true,
+            "pending": []
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "partial_receipt_seals",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": false
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "sealed": [
+          0
+        ],
+        "complete": [],
+        "coverage": [
+          {
+            "run": 0,
+            "covered": false,
+            "pending": [
+              0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "exact_retry_is_idempotent",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "commitments": [
+          {
+            "run": 0,
+            "operation": 0,
+            "payload": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "retry_after_seal_is_cached",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "commitments": [
+          {
+            "run": 0,
+            "operation": 0,
+            "payload": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "two_attempts_one_operation",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 1,
+          "payload": 0
+        },
+        {
+          "kind": "fail",
+          "run": 0,
+          "attempt": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 1,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "commitments": [
+          {
+            "run": 0,
+            "operation": 0,
+            "payload": 0
+          }
+        ],
+        "coverage": [
+          {
+            "run": 0,
+            "covered": true,
+            "pending": []
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "run_ids_scope_commitments",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        },
+        {
+          "kind": "dispatch",
+          "run": 1,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 1,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 1,
+          "operation": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "commitments": [
+          {
+            "run": 0,
+            "operation": 0,
+            "payload": 0
+          },
+          {
+            "run": 1,
+            "operation": 0,
+            "payload": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "operation_ids_scope_commitments",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        },
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 1,
+          "attempt": 1,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 1,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 1,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "commitments": [
+          {
+            "run": 0,
+            "operation": 0,
+            "payload": 0
+          },
+          {
+            "run": 0,
+            "operation": 1,
+            "payload": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "duplicate_timeout_is_idempotent",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "timeout",
+          "run": 0,
+          "attempt": 0
+        },
+        {
+          "kind": "timeout",
+          "run": 0,
+          "attempt": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "timeouts": [
+          {
+            "run": 0,
+            "attempt": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "unused_run_can_be_vacuously_complete",
+    "input": {
+      "events": [
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": true,
+      "state": {
+        "sealed": [
+          0
+        ],
+        "complete": [
+          0
+        ],
+        "coverage": [
+          {
+            "run": 0,
+            "covered": true,
+            "pending": []
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "unsupported_citation",
+    "input": {
+      "events": [
+        {
+          "kind": "cite",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "unsupported_evidence",
+      "index": 0
+    }
+  },
+  {
+    "name": "wrong_run_citation",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "cite",
+          "run": 1,
+          "attempt": 0,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "unsupported_evidence",
+      "index": 2
+    }
+  },
+  {
+    "name": "wrong_artifact_citation",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "cite",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 1
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "unsupported_evidence",
+      "index": 2
+    }
+  },
+  {
+    "name": "wrong_attempt_citation",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "cite",
+          "run": 0,
+          "attempt": 1,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "unsupported_evidence",
+      "index": 2
+    }
+  },
+  {
+    "name": "failed_outcome_cannot_support",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "fail",
+          "run": 0,
+          "attempt": 0
+        },
+        {
+          "kind": "cite",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "unsupported_evidence",
+      "index": 2
+    }
+  },
+  {
+    "name": "result_without_dispatch",
+    "input": {
+      "events": [
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "request_missing",
+      "index": 0
+    }
+  },
+  {
+    "name": "failure_without_dispatch",
+    "input": {
+      "events": [
+        {
+          "kind": "fail",
+          "run": 0,
+          "attempt": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "request_missing",
+      "index": 0
+    }
+  },
+  {
+    "name": "timeout_without_dispatch",
+    "input": {
+      "events": [
+        {
+          "kind": "timeout",
+          "run": 0,
+          "attempt": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "request_missing",
+      "index": 0
+    }
+  },
+  {
+    "name": "attempt_cannot_be_redispatched",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 1,
+          "attempt": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "attempt_exists",
+      "index": 1
+    }
+  },
+  {
+    "name": "changed_retry_payload",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 1,
+          "payload": 1
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "operation_payload_conflict",
+      "index": 1
+    }
+  },
+  {
+    "name": "conflicting_commit",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 1
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "commit_payload_conflict",
+      "index": 3
+    }
+  },
+  {
+    "name": "commit_before_success",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "commit_unconfirmed",
+      "index": 1
+    }
+  },
+  {
+    "name": "commit_after_failure",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "fail",
+          "run": 0,
+          "attempt": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "commit_unconfirmed",
+      "index": 2
+    }
+  },
+  {
+    "name": "unregistered_commit",
+    "input": {
+      "events": [
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "commit_unconfirmed",
+      "index": 0
+    }
+  },
+  {
+    "name": "commit_wrong_payload",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 1
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "commit_unconfirmed",
+      "index": 2
+    }
+  },
+  {
+    "name": "premature_complete",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "incomplete_coverage",
+      "index": 1
+    }
+  },
+  {
+    "name": "timeout_is_not_completion",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "timeout",
+          "run": 0,
+          "attempt": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "incomplete_coverage",
+      "index": 2
+    }
+  },
+  {
+    "name": "all_attempts_must_resolve",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 1,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "incomplete_coverage",
+      "index": 3
+    }
+  },
+  {
+    "name": "duplicate_success",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "outcome_exists",
+      "index": 2
+    }
+  },
+  {
+    "name": "success_after_failure",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "fail",
+          "run": 0,
+          "attempt": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "outcome_exists",
+      "index": 2
+    }
+  },
+  {
+    "name": "timeout_after_success",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        },
+        {
+          "kind": "timeout",
+          "run": 0,
+          "attempt": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "outcome_exists",
+      "index": 2
+    }
+  },
+  {
+    "name": "sealed_rejects_dispatch",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": false
+        },
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 1,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "run_sealed",
+      "index": 2
+    }
+  },
+  {
+    "name": "sealed_rejects_success",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": false
+        },
+        {
+          "kind": "succeed",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "run_sealed",
+      "index": 2
+    }
+  },
+  {
+    "name": "sealed_rejects_failure",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": false
+        },
+        {
+          "kind": "fail",
+          "run": 0,
+          "attempt": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "run_sealed",
+      "index": 2
+    }
+  },
+  {
+    "name": "sealed_rejects_timeout",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": false
+        },
+        {
+          "kind": "timeout",
+          "run": 0,
+          "attempt": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "run_sealed",
+      "index": 2
+    }
+  },
+  {
+    "name": "sealed_rejects_cite",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": false
+        },
+        {
+          "kind": "cite",
+          "run": 0,
+          "attempt": 0,
+          "artifact": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "run_sealed",
+      "index": 2
+    }
+  },
+  {
+    "name": "sealed_rejects_commit",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": false
+        },
+        {
+          "kind": "commit",
+          "run": 0,
+          "operation": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "run_sealed",
+      "index": 2
+    }
+  },
+  {
+    "name": "sealed_rejects_finalize",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": false
+        },
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "run_sealed",
+      "index": 2
+    }
+  },
+  {
+    "name": "missing_events",
+    "input": {},
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": null
+    }
+  },
+  {
+    "name": "events_wrong_type",
+    "input": {
+      "events": {}
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": null
+    }
+  },
+  {
+    "name": "unknown_top_field",
+    "input": {
+      "events": [],
+      "unsafe": true
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": null
+    }
+  },
+  {
+    "name": "null_root",
+    "input": null,
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": null
+    }
+  },
+  {
+    "name": "unknown_kind",
+    "input": {
+      "events": [
+        {
+          "kind": "invent"
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": 0
+    }
+  },
+  {
+    "name": "missing_field",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": 0
+    }
+  },
+  {
+    "name": "negative_id",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": -1,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": 0
+    }
+  },
+  {
+    "name": "fractional_id",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 1.5,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": 0
+    }
+  },
+  {
+    "name": "string_id",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": "0",
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": 0
+    }
+  },
+  {
+    "name": "bool_id",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": true,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": 0
+    }
+  },
+  {
+    "name": "wrong_complete_type",
+    "input": {
+      "events": [
+        {
+          "kind": "finalize",
+          "run": 0,
+          "complete": "true"
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": 0
+    }
+  },
+  {
+    "name": "unknown_event_field",
+    "input": {
+      "events": [
+        {
+          "kind": "dispatch",
+          "run": 0,
+          "operation": 0,
+          "attempt": 0,
+          "payload": 0,
+          "claim": true
+        }
+      ]
+    },
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": 0
+    }
+  },
+  {
+    "name": "invalid_json",
+    "raw": "{",
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": null
+    }
+  },
+  {
+    "name": "empty_input",
+    "raw": "",
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": null
+    }
+  },
+  {
+    "name": "trailing_json",
+    "raw": "{\"events\":[]} {\"events\":[]}",
+    "expect": {
+      "accepted": false,
+      "category": "malformed_input",
+      "index": null
+    }
+  }
+]
